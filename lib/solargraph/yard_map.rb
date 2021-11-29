@@ -210,7 +210,7 @@ module Solargraph
         end
         result = []
         begin
-          spec = spec_for_require(r)
+          spec = spec_for_require(r, @gemset[r])
           if @source_gems.include?(spec.name)
             next
           end
@@ -342,8 +342,8 @@ module Solargraph
 
     # @param path [String]
     # @return [Gem::Specification]
-    def spec_for_require path
-      spec = Gem::Specification.find_by_path(path) || Gem::Specification.find_by_name(path.split('/').first)
+    def spec_for_require path, version=nil
+      spec = Gem::Specification.find_by_path(path) || Gem::Specification.find_by_name(path.split('/').first, version)
       # Avoid loading the spec again if it's going to be skipped anyway
       return spec if @source_gems.include?(spec.name)
       # Avoid loading the spec again if it's already the correct version
